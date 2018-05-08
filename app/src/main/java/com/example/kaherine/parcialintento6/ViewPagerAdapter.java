@@ -4,16 +4,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPager extends FragmentPagerAdapter implements Serializable {
-    private int COUNT = 2;
+public class ViewPagerAdapter extends FragmentPagerAdapter {
+
+    private int count = 2;
     private List<String> tabTitles = new ArrayList<>();
     private List<Fragment> fragments = new ArrayList<>();
     private boolean searched;
-    public ViewPager(FragmentManager fm) {
+
+
+    public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -29,7 +31,7 @@ public class ViewPager extends FragmentPagerAdapter implements Serializable {
 
     @Override
     public int getCount() {
-        return COUNT;
+        return count;
     }
 
     @Override
@@ -45,6 +47,9 @@ public class ViewPager extends FragmentPagerAdapter implements Serializable {
         this.searched = searched;
     }
 
-
+    public void addFragment(Fragment fragment, String title) {
+        fragments.add(fragment);
+        tabTitles.add(title);
+    }
 
 }

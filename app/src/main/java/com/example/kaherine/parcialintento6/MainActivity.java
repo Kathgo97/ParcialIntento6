@@ -1,12 +1,20 @@
 package com.example.kaherine.parcialintento6;
 
+
+import android.Manifest;
+import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,142 +25,134 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
-    public ArrayList<Contact> contactos = new ArrayList<>();
+    public static ArrayList<Contact> contactos = new ArrayList<>();
+    private transient ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = this.getIntent();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        if(savedInstanceState!=null){
+            contactos = savedInstanceState.getParcelableArrayList("CONTACT_ADAPTER");
+        }
+        if (contactos.size() == 0) {
+            showContactos();
+        }
+        if(intent !=null){
+            Contact C = intent.getParcelableExtra("ADDED");
+            if(C!=null){
+                contactos.add(0,C);
+                getIntent().removeExtra("ADDED");
             }
-        });
+        }
+
+        FragmentManager valueof = getSupportFragmentManager();
+        if(viewPagerAdapter==null)
+            viewPagerAdapter = new ViewPagerAdapter(valueof);
+        ViewPager viewPager = findViewById(R.id.Pager);
+        viewPager.setAdapter(viewPagerAdapter);
+
+
+        viewPagerAdapter.addFragment(RecyclerContact.newInstance( 0,contactos), getString(R.string.normal));
+        viewPagerAdapter.addFragment(RecyclerContact.newInstance(1,contactos), getString(R.string.favoritos));
+
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+
+        handleIntent(getIntent());
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showContactos();
+            } else {
+                Toast.makeText(this, R.string.GrantPhone, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        public static Fragment newInstance (int sectionNumber){
-            Fragment tabcontact= null;
-
-            switch (sectionNumber){
-                case 1: tabcontact = new Tabcontact();
-                    break;
-
-                case 2: tabcontact = new Tabcontact();
-                    break;
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Pattern p = Pattern.compile(query);
+            Matcher m;
+            for (Contact c : contactos) {
+                m = p.matcher(c.getName());
+                if (m.find()) {
+                    c.setSearched(true);
+                }
+                else
+                    c.setSearched(false);
 
             }
-
-            return tabcontact;
-        }
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.cardview_contact, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+            viewPagerAdapter.notifyDataSetChanged();
         }
     }
 
+
+
+    private void showContactos() {
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        } else {
+            addContacts();
+        }
+    }
 
     public void addContacts() {
         try {
             ContentResolver cr = getContentResolver();
             Cursor general = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-
+            ArrayList<String> Numeros;
             while (general.moveToNext()) {
                 String id = general.getString(general.getColumnIndex(ContactsContract.Contacts._ID));
-
+                Numeros=new ArrayList<>();
                 String name = general.getString(general.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String phoneNumber = "";
+                String type = ReturnString(general.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                 String profile = general.getString(general.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
                 String thumbnailUri = general.getString(general.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
                 String email = "";
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 if (Integer.parseInt(general.getString(general.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                     Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
                     while (pCur.moveToNext()) {
-                        phoneNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        Numeros.add(pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
                     }
                     pCur.close();
                 }
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                contactos.add(new Contact(name,phoneNumber,email,profile,false));
+                contactos.add(new Contact(Long.parseLong(id),name,Numeros,profile,email,false,type));
             }
             general.close();
 
@@ -183,27 +183,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 2;
+    private String ReturnString(int type) {
+        switch (type) {
+            case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+                return getString(R.string.HomeReturn);
+            case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+                return getString(R.string.MobileReturn);
+            case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+                return getString(R.string.WorkReturn);
+            case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
+                return getString(R.string.OtherReturn);
+            default:
+                return getString(R.string.CustomReturn);
         }
     }
 }

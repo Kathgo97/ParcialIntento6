@@ -1,90 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ClickContact">
 
-    <LinearLayout
-        android:id="@+id/layout_foto"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/showpicture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/contacto" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="200dp"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:id="@+id/FragmentContact"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="40dp">
-
-            <TextView
-                android:id="@+id/showname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contact name"
-                android:layout_marginBottom="10dp"
-                android:textSize="30sp"/>
-            <TextView
-                android:id="@+id/showphone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Telephone number"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:textSize="20sp"/>
-            <TextView
-                android:id="@+id/showmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Contact mail"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:textSize="20sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/showbday"
-                android:text="Birthday"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <ImageButton
-                android:id="@+id/call"
-                android:layout_marginRight="30dp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/call"/>
-            <ImageButton
-                android:id="@+id/share"
-                android:layout_marginLeft="30dp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/share"/>
-
-        </LinearLayout>
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

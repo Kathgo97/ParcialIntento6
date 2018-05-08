@@ -11,34 +11,39 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class AddContact extends AppCompatActivity implements Serializable {
-    /*private ImageButton Profilepic;
+    private Spinner TypeSelected;
+    private ImageView Profilepic;
     private EditText Name;
     private EditText Number;
     private EditText Email;
     private int RESULT_LOAD_IMG = 1;
     private FloatingActionButton Upload;
-    private ImageButton Insert;
+    private Button Insert;
     private Uri ImageUriU;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addcontact);
 
-        Profilepic = findViewById(R.id.add_image);
-        Name = findViewById(R.id.name_fill);
-        Number = findViewById(R.id.number_fill);
-        Email = findViewById(R.id.mail_fill);
+        TypeSelected = findViewById(R.id.TypeAdd);
+        Profilepic = findViewById(R.id.ImageAdd);
+        Name = findViewById(R.id.NameAdd);
+        Number = findViewById(R.id.NumberAdd);
+        Email = findViewById(R.id.EmailAdd);
         Upload = findViewById(R.id.UploadAdd);
         Insert = findViewById(R.id.InsertNewC);
 
-        ImageUriU = Uri.parse("android.resource://com.example.katherine.ParcialIntento6/" + R.drawable.ic_account_circle_black_36dp);
+        ImageUriU = Uri.parse("android.resource://com.example.alexbig.parcialpdm1/" + R.drawable.ic_account_circle);
 
         Upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,16 +53,43 @@ public class AddContact extends AppCompatActivity implements Serializable {
                 startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
             }
         });
+
+
         Insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<String> first = new ArrayList<>();
+                first.add(Number.getText().toString());
                 Intent intent = new Intent(v.getContext(),MainActivity.class);
-                intent.putExtra("ADDED", new Contact(Name.getText().toString(),
-                        Number.getText().toString(),ImageUriU+""
-                        ,Email.getText().toString(),false));
+                Contact Contact = new Contact(-1,Name.getText().toString(),first
+                        ,ImageUriU+""
+                        ,Email.getText().toString(),false,
+                        TypeSelected.getSelectedItem().toString());
+                intent.putExtra("ADDED",Contact );
+                Contact.setId(Contact.getAmount());
                 v.getContext().startActivity(intent);
             }
         });
-    }*/
+    }
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
 
+
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                ImageUriU = imageUri;
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                Profilepic.setImageBitmap(selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, R.string.SomeWrong, Toast.LENGTH_LONG).show();
+            }
+
+        }else {
+            Toast.makeText(this, R.string.PickImage,Toast.LENGTH_LONG).show();
+        }
+    }
 }

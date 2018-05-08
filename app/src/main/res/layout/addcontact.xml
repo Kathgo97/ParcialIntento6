@@ -1,120 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AddContact">
 
-    <ImageButton
-        android:id="@+id/addpic"
-        android:layout_marginLeft="95dp"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@drawable/contactpic"/>
-
-    <LinearLayout
-        android:layout_below="@id/addpic"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="65dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NAME"/>
-
-            <EditText
-                android:id="@+id/name_fill"
-                android:layout_marginLeft="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type something here"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NUMBER"/>
-
-            <EditText
-                android:id="@+id/number_fill"
-                android:layout_marginLeft="24dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type your phone number"/>
-        </LinearLayout>
-
-
-
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/mail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="E-MAIL"/>
-            <EditText
-                android:id="@+id/mail_fill"
-                android:layout_marginLeft="35dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Type something here"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ADDRESS"/>
-
-            <EditText
-                android:id="@+id/address_fill"
-                android:layout_marginLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Type something here" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/bday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/BDAY"/>
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:text="add birthday date"
-                android:onClick="birthday"
-                />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/add"
-        android:layout_marginBottom="35dp"
-        android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
+    <TableLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADD CONTACT"/>
+        android:layout_margin="8dp"
+        android:elevation="4dp">
 
-</RelativeLayout>
+        <TableRow android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_margin="8dp">
+            <TextView android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:text="@string/nuevo_contacto"
+                android:textSize="32sp"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="144dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ImageAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_account_circle" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/UploadAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="36dp"
+                    android:src="@drawable/ic_plus" />
+            </FrameLayout>
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/NameAdd"
+                android:hint="@string/Nombre"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp" />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
+        <TableRow
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:layout_marginRight="8dp"
+                android:id="@+id/TypeAdd"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:entries="@array/type_phone"
+                android:layout_marginEnd="8dp" />
+            <EditText
+                android:layout_marginLeft="8dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/NumberAdd"
+                android:hint="@string/numero"
+                android:inputType="phone"
+                android:layout_marginStart="8dp" />
+        </TableRow>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"
+            android:layout_margin="8dp"/>
+        <TableRow
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:id="@+id/EmailAdd"
+                android:hint="@string/email"/>
+        </TableRow>
+        <TableRow android:gravity="center"
+            android:layout_margin="8dp">
+            <Button android:text="@string/nuevo"
+                android:textAllCaps="false"
+                android:textColor="#f7f7f7"
+                android:textSize="24sp"
+                android:background="@color/colorPrimaryDark"
+                android:id="@+id/InsertNewC"
+                android:elevation="7dp"/>
+        </TableRow>
+    </TableLayout>
+
+
+</ScrollView>

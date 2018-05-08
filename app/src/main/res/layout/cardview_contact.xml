@@ -1,80 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:elevation="7dp"
-    android:id="@+id/CardContacto"
-    card_view:cardUseCompatPadding="true"
-    card_view:cardBackgroundColor="#eff0f0"
-    card_view:cardCornerRadius="8dp">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/img"
+    <android.support.v7.widget.CardView
+        android:id="@+id/CardContacto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_width= "match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="#eff0f0">
+        app:cardCornerRadius="2dp"
+        android:elevation="8dp"
+        tools:context=".ContactoCard"
+        app:cardUseCompatPadding="true">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/contact_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/contacto1"/>
-
-        <LinearLayout
-            android:orientation="vertical"
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <TableRow android:gravity="center">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_account_circle"
+                    android:scaleType="centerCrop"/>
+
+            </TableRow>
+
+            <TableRow android:gravity="center">
 
                 <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Usuario"
-                    android:textSize="20sp"
-                    />
+                    android:id="@+id/nameCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/Nombre" />
 
+
+            </TableRow>
+            <TableRow android:gravity="center">
                 <ImageButton
-                    android:id="@+id/offfav"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/favoff" />
+                    android:id="@+id/favoriteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:baselineAlignBottom="true"
+                    android:src="@drawable/ic_star_off" />
+            </TableRow>
 
-            </LinearLayout>
+        </TableLayout>
 
-            <TextView
-                android:id="@+id/number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Telefono"
-                android:textSize="16sp" />
+    </android.support.v7.widget.CardView>
 
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
-            <ImageButton
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/favoff" />
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-
-
-
-
-</android.support.v7.widget.CardView>
+</LinearLayout>
